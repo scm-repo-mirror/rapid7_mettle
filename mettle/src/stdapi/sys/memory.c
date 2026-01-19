@@ -450,7 +450,7 @@ int add_matches(char *full_str, struct match_result **results, uint64_t match_of
 struct addr_range *parse_maps_file(pid_t pid)
 {
 	char pid_str[8];
-	sprintf(pid_str, "%d", pid);
+	snprintf(pid_str, sizeof(pid_str), "%d", pid);
 	int path_len = strlen("/proc/") + strlen(pid_str) + strlen("/maps") + 1;
 
 	char maps_path[path_len];
