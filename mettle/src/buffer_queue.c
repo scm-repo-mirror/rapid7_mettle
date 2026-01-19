@@ -45,6 +45,7 @@ void buffer_queue_drain_all(struct buffer_queue *q)
 void buffer_queue_free(struct buffer_queue *q)
 {
 	if (q) {
+		buffer_queue_drain_all(q);
 		free(q);
 	}
 }
