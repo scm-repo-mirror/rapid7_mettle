@@ -224,8 +224,17 @@ static void handle_clear(const char *line)
 
 static void handle_use(const char *line)
 {
+	const char *name = line + 3;
+	while (*name == ' ' || *name == '\t') {
+		name++;
+	}
+
+	if (*name == '\0') {
+		console_log_bad("usage: use <module_name>");
+		return;
+	}
+
 	int num_modules = 0;
-	const char *name = line + 4;
 	struct module **modules = modulemgr_find_modules(
 		console.modulemgr, name, &num_modules);
 	if (num_modules == 1) {
