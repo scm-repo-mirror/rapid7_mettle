@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "mic.h"
@@ -23,6 +24,8 @@ struct tlv_packet *audio_mic_list(struct tlv_handler_ctx *ctx) {
 	}
     }
 
+    free(sound_device);
+    fclose(proc_asound_pcm);
     return p;
 }
 

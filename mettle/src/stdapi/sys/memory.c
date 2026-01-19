@@ -359,6 +359,8 @@ struct match_result *search_mem_sections(pid_t pid, uint32_t min_len, struct add
 				struct match_result *new_res = realloc(first_res, sizeof(struct match_result) * results_len * 2);
 				if(new_res == NULL)
 				{
+					free(read_str);
+					free(matches);
 					break;
 				}
 
