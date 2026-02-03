@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "mic.h"
@@ -23,6 +24,8 @@ struct tlv_packet *audio_mic_list(struct tlv_handler_ctx *ctx) {
 	}
     }
 
+    free(sound_device);
+    fclose(proc_asound_pcm);
     return p;
 }
 
@@ -35,7 +38,7 @@ struct tlv_packet *audio_mic_start(struct tlv_handler_ctx *ctx) {
     int rc = TLV_RESULT_FAILURE;
 
     char cmd[100];
-    sprintf(cmd, "arecord -D plughw:%d -q -f cd -t raw -r 11025 -c 1", device);
+    snprintf(cmd, sizeof(cmd), "arecord -D plughw:%d -q -f cd -t raw -r 11025 -c 1", device);
     arecord = popen(cmd, "r");
     if (arecord != NULL) {
 	rc = TLV_RESULT_SUCCESS;

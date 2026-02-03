@@ -196,12 +196,14 @@ tlv_packet_add_child_raw(struct tlv_packet *p, const void *val, size_t len)
 {
 	int packet_len = tlv_packet_len(p);
 	int new_len = packet_len + len;
-	p = realloc(p, new_len);
-	if (p) {
-		memcpy((void *)p + packet_len, val, len);
-		p->h.len = htonl(new_len);
+	struct tlv_packet *new_p = realloc(p, new_len);
+	if (new_p) {
+		memcpy((void *)new_p + packet_len, val, len);
+		new_p->h.len = htonl(new_len);
+		return new_p;
 	}
-	return p;
+	free(p);
+	return NULL;
 }
 
 struct tlv_packet *
@@ -232,15 +234,17 @@ struct tlv_packet * tlv_packet_add_raw(struct tlv_packet *p, uint32_t type,
 
 	int packet_len = tlv_packet_len(p);
 	int new_len = packet_len + TLV_MIN_LEN + len;
-	p = realloc(p, new_len);
-	if (p) {
-		struct tlv_header *hdr = (void *)p + packet_len;
+	struct tlv_packet *new_p = realloc(p, new_len);
+	if (new_p) {
+		struct tlv_header *hdr = (void *)new_p + packet_len;
 		hdr->type = htonl(type);
 		hdr->len = htonl(TLV_MIN_LEN + len);
 		memcpy(hdr + 1, val, len);
-		p->h.len = htonl(new_len);
+		new_p->h.len = htonl(new_len);
+		return new_p;
 	}
-	return p;
+	free(p);
+	return NULL;
 }
 
 struct tlv_packet * tlv_packet_add_str(struct tlv_packet *p,
